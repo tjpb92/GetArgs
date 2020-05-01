@@ -37,5 +37,8 @@ Ce fichier est nommé : *GetArgs.prop*.
 Le fichier *GetArgs_Example.prop* est fourni à titre d'exemple.
 
 ## Références:
-[A tour of Scala](https://docs.scala-lang.org/tour/tour-of-scala.html)
-[Scala Book](https://docs.scala-lang.org/overviews/scala-book/introduction.html)
+- [A tour of Scala](https://docs.scala-lang.org/tour/tour-of-scala.html)
+- [Scala Book](https://docs.scala-lang.org/overviews/scala-book/introduction.html)
+- [Jenkov's Scala tutorial (version2.8.0)](http://tutorials.jenkov.com/scala/index.html)
+- [Data Flair Scala tutorials](https://data-flair.training/blogs/scala-tutorials-home/)
+- [Javatpoint Scala tutorial](https://www.javatpoint.com/scala-tutorial)
