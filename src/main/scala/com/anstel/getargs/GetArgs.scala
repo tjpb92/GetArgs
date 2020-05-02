@@ -17,7 +17,7 @@ class GetArgsException(msg: String) extends Exception(msg) {
  *
  * @param args paramètres en ligne de commande
  * @author Thierry Baribaud.
- * @version 1.03
+ * @version 1.05
  */
 class GetArgs(args: Array[String]) {
 
@@ -55,6 +55,7 @@ class GetArgs(args: Array[String]) {
       currentParam = args(i)
       ip1 = i + 1
       nextParam = if (ip1 < n) args(ip1) else ""
+      println("currentParam:"+currentParam+", nextParam:"+nextParam)
       if (currentParam.equals("-db")) {
         if (ip1 < n) {
           dbType = nextParam
@@ -65,16 +66,24 @@ class GetArgs(args: Array[String]) {
         }
       } else if (currentParam.equals("-b")) {
         if (ip1 < n) {
-          begDate = ddmmyyyyFormat.parse(nextParam)
-          i = ip1
+          try {
+            begDate = ddmmyyyyFormat.parse(nextParam)
+            i = ip1
+          } catch {
+            case exception: Exception => throw new GetArgsException("ERREUR : Mauvaise date -b " + nextParam)
+          }
         }
         else {
           throw new GetArgsException("ERREUR : Date de début non définie")
         }
       } else if (currentParam.equals("-e")) {
         if (ip1 < n) {
-          endDate = ddmmyyyyFormat.parse(nextParam)
-          i = ip1
+          try {
+            endDate = ddmmyyyyFormat.parse(nextParam)
+            i = ip1
+          } catch {
+            case exception: Exception => throw new GetArgsException("ERREUR : Mauvaise date -e " + nextParam)
+          }
         }
         else {
           throw new GetArgsException("ERREUR : Date de fin non définie")
@@ -123,7 +132,7 @@ class GetArgs(args: Array[String]) {
         else {
           throw new GetArgsException("ERREUR : chemin non défini")
         }
-      } else if (currentParam.equals("-suffis")) {
+      } else if (currentParam.equals("-suffix")) {
         if (ip1 < n) {
           suffix = nextParam
           i = ip1
