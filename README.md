@@ -42,3 +42,4 @@ Le fichier *GetArgs_Example.prop* est fourni à titre d'exemple.
 - [Jenkov's Scala tutorial (version2.8.0)](http://tutorials.jenkov.com/scala/index.html)
 - [Data Flair Scala tutorials](https://data-flair.training/blogs/scala-tutorials-home/)
 - [Javatpoint Scala tutorial](https://www.javatpoint.com/scala-tutorial)
+- [10 Essential Tips and Tricks For IntelliJ IDEA](https://www.youtube.com/watch?v=Mr2mPu1tLhk)
