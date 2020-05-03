@@ -1,9 +1,7 @@
 package com.anstel.libUtilsScala
 
-import java.io.{FileInputStream, FileNotFoundException}
+import java.io.FileInputStream
 import java.util.Properties
-
-import scala.io.Source
 
 /**
  * Classe définissant l'objet ApplicationProperties
@@ -14,13 +12,19 @@ import scala.io.Source
  *
  * @param filename of the file that contains application properties
  * @author Thierry Baribaud.
- * @version 1.06
+ * @version 1.07
  */
 class ApplicationProperties(filename: String) extends Properties {
 
   println("Creating ApplicationProperties object ...")
-
   println("Reading " + filename + " ...")
   load(new FileInputStream(filename))
   println("ApplicationProperties read.")
+
+  def getPropertyValue(key: String): Either[String, String] = {
+    val property = getProperty(key)
+    if (property == null) Left(s"ERREUR : Propriété non définie $property")
+    else if (property.isEmpty) Left(s"ERREUR : Propriété vide")
+    else Right(property)
+  }
 }

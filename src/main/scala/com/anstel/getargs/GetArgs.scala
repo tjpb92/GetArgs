@@ -1,37 +1,33 @@
 package com.anstel.getargs
 
-import java.text.SimpleDateFormat
-import java.util.{Calendar, Date, GregorianCalendar}
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import com.anstel.libUtilsScala.{ApplicationProperties, GetArgsException}
 
 /**
  * Classe définissant l'objet GetArgs
  *
  * @param args paramètres en ligne de commande
- * @author Thierry Baribaud.
- * @version 1.06
+ * @author Thierry Baribaud
+ * @version 1.07
  */
 class GetArgs(args: Array[String]) {
 
-  private val today = Calendar.getInstance.getTime
-  private val ddmmyyyyFormat = new SimpleDateFormat("dd/MM/yyyy")
+  private val today: LocalDate = LocalDate.now()
 
   var dbType: String = "dev"
   var nbDay: Int = 7
-//  var begDate: String = ddmmyyyyFormat.format(today - nbDay * - 1000 * 60 * 60 * 24)
-//  var endDate: String = ddmmyyyyFormat.format(today)
-  var begDate: Date = GetArgs.dateAtMidnight(new Date(today.getTime - nbDay * 1000 * 60 * 60 * 24))
-  var endDate: Date = GetArgs.dateAtMidnight(today)
+  var begDate: LocalDate = today.minusDays(nbDay)
+  var endDate: LocalDate = today
   var callCenter: String = "Excelia"
-  var client: String = _
-  var clientUuid: String = _
+  var client: String = ""
+  var clientUuid: String = ""
   var path: String = "."
-  var suffix: String = _
+  var suffix: String = ""
   var debugMode: Boolean = false
   var testMode: Boolean = false
 
   readParams()
-
 
   private def readParams(): Unit = {
     val n: Int = args.length
@@ -40,14 +36,14 @@ class GetArgs(args: Array[String]) {
     var currentParam: String = ""
     var nextParam: String = ""
 
-//    println("nargs:" + n)
+    //    println("nargs:" + n)
     //  for (arg <- args) println(arg)
     i = 0
     while (i < n) {
       currentParam = args(i)
       ip1 = i + 1
       nextParam = if (ip1 < n) args(ip1) else ""
-      println("currentParam:"+currentParam+", nextParam:"+nextParam)
+      println("currentParam:" + currentParam + ", nextParam:" + nextParam)
       if (currentParam.equals("-db")) {
         if (ip1 < n) {
           dbType = nextParam
@@ -59,7 +55,7 @@ class GetArgs(args: Array[String]) {
       } else if (currentParam.equals("-b")) {
         if (ip1 < n) {
           try {
-            begDate = ddmmyyyyFormat.parse(nextParam)
+            begDate = LocalDate.parse(nextParam, GetArgs.ddmmyyyyFormat)
             i = ip1
           } catch {
             case exception: Exception => throw new GetArgsException("ERREUR : Mauvaise date -b " + nextParam)
@@ -71,7 +67,7 @@ class GetArgs(args: Array[String]) {
       } else if (currentParam.equals("-e")) {
         if (ip1 < n) {
           try {
-            endDate = ddmmyyyyFormat.parse(nextParam)
+            endDate = LocalDate.parse(nextParam, GetArgs.ddmmyyyyFormat)
             i = ip1
           } catch {
             case exception: Exception => throw new GetArgsException("ERREUR : Mauvaise date -e " + nextParam)
@@ -143,10 +139,9 @@ class GetArgs(args: Array[String]) {
       i += 1
     }
 
-    if (begDate.after(endDate))
-      throw new GetArgsException("ERREUR : La date de début " + ddmmyyyyFormat.format(begDate) +
-                  " doit être antérieure à la date de fin " + ddmmyyyyFormat.format(endDate))
-    //  readParams()
+    if (begDate.isAfter(endDate))
+      throw new GetArgsException("ERREUR : La date de début " + GetArgs.ddmmyyyyFormat.format(begDate) +
+        " doit être antérieure à la date de fin " + GetArgs.ddmmyyyyFormat.format(endDate))
   }
 
   /**
@@ -157,8 +152,8 @@ class GetArgs(args: Array[String]) {
   override def toString: String =
     "GetArgs:{" +
       "dbType:" + dbType +
-      ", begDate:" + ddmmyyyyFormat.format(begDate) +
-      ", endDate:" + ddmmyyyyFormat.format(endDate) +
+      ", begDate:" + GetArgs.ddmmyyyyFormat.format(begDate) +
+      ", endDate:" + GetArgs.ddmmyyyyFormat.format(endDate) +
       ", nbDay:" + nbDay +
       ", callCenter:" + callCenter +
       ", client:" + client +
@@ -182,6 +177,8 @@ class GetArgs(args: Array[String]) {
  * Cliquer sur OK
  */
 object GetArgs {
+  val ddmmyyyyFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+
   def main(args: Array[String]) {
     println("Instanciation d'un objet GetArgs ...")
     try {
@@ -189,7 +186,7 @@ object GetArgs {
       println(getArgs)
       println("Instanciation effectuée.")
 
-      val applicationProperties : ApplicationProperties = new ApplicationProperties("GetArgs2.prop")
+      val applicationProperties: ApplicationProperties = new ApplicationProperties("GetArgs2.prop")
       println(applicationProperties)
     }
     catch {
@@ -197,16 +194,16 @@ object GetArgs {
     }
   }
 
-  def dateAtMidnight(date: Date):Date = {
-    var dateAtMidnigth:Calendar = new GregorianCalendar()
-
-    dateAtMidnigth.setTime(date)
-    dateAtMidnigth.set(Calendar.HOUR_OF_DAY, 0)
-    dateAtMidnigth.set(Calendar.MINUTE, 0)
-    dateAtMidnigth.set(Calendar.SECOND, 0)
-    dateAtMidnigth.set(Calendar.MILLISECOND, 0)
-
-    dateAtMidnigth.getTime
-  }
+  //  def dateAtMidnight(date: LocalDate) : LocalDate = {
+  //    var dateAtMidnigth:Calendar = new GregorianCalendar()
+  //
+  //    dateAtMidnigth.setTime(date)
+  //    dateAtMidnigth.set(Calendar.HOUR_OF_DAY, 0)
+  //    dateAtMidnigth.set(Calendar.MINUTE, 0)
+  //    dateAtMidnigth.set(Calendar.SECOND, 0)
+  //    dateAtMidnigth.set(Calendar.MILLISECOND, 0)
+  //
+  //    dateAtMidnigth.getTime
+  //  }
 
 }

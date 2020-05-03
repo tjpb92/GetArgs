@@ -43,3 +43,6 @@ Le fichier *GetArgs_Example.prop* est fourni à titre d'exemple.
 - [Data Flair Scala tutorials](https://data-flair.training/blogs/scala-tutorials-home/)
 - [Javatpoint Scala tutorial](https://www.javatpoint.com/scala-tutorial)
 - [10 Essential Tips and Tricks For IntelliJ IDEA](https://www.youtube.com/watch?v=Mr2mPu1tLhk)
+- [Try, Option or Either ?](https://xebia.com/blog/try-option-or-either/)
+- [Easy validation with Sacal's Either](https://coderwall.com/p/kokm7w/easy-validation-with-scala-s-either)
+- [The Neophyte's guide to Scala part 7](https://danielwestheide.com/blog/the-neophytes-guide-to-scala-part-7-the-either-type/)

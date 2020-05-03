@@ -1,8 +1,6 @@
 package com.anstel.getargs
 
-import java.text.SimpleDateFormat
-import java.util.{Calendar, Date, GregorianCalendar}
-
+import java.time.LocalDate
 import com.anstel.libUtilsScala.GetArgsException
 import org.junit.Assert._
 import org.junit._
@@ -11,94 +9,87 @@ import org.junit._
  * Jeux de tests pour la classe GetArgs
  *
  * @author Thierry Baribaud
- * @version 1.06
+ * @version 1.07
  */
 class GetArgsTest {
 
-  var args: Array[String] = _
-  var getArgs: GetArgs = _
-  var today:Date = _
-  val ddmmyyyyFormat = new SimpleDateFormat("dd/MM/yyyy")
+  var args: Array[String] = Array.empty[String]
+  var getArgs: GetArgs = new GetArgs(args)
+  var today: LocalDate = LocalDate.now()
 
-  @Before def makeArgs(): Unit = {
-    args = Array.empty
-    getArgs = new GetArgs(args)
-    today=GetArgs.dateAtMidnight(new Date())
-  }
+  //  @Before def makeArgs(): Unit = {
+  //    args = Array.empty
+  //    getArgs = new GetArgs(args)
+  //    today=LocalDate.now()
+  //  }
 
-// ----------- miscellaneous ---------------------------------------
-  @Test (expected = classOf[GetArgsException])
+  // ----------- miscellaneous ---------------------------------------
+  @Test(expected = classOf[GetArgsException])
   def badParameterShouldFail(): Unit = {
     val args = Array("-bad")
     val getArgs = new GetArgs(args)
   }
 
-// ----------- dbType ---------------------------------------
+  // ----------- dbType ---------------------------------------
   @Test def dbTypeShouldBeDev(): Unit = {
     assertEquals("dev", getArgs.dbType)
   }
 
-  @Test (expected = classOf[GetArgsException])
+  @Test(expected = classOf[GetArgsException])
   def undefinedDbTypeShouldFail(): Unit = {
     val args = Array("-db")
     val getArgs = new GetArgs(args)
   }
 
-// ----------- nbDay ---------------------------------------
+  // ----------- nbDay ---------------------------------------
   @Test def nbDayShouldBe7(): Unit = {
     assertEquals(7, getArgs.nbDay)
   }
 
   @Test
   def definedNbDayShouldSuccess(): Unit = {
-    val n:Int = 10
+    val n: Int = 10
     val args = Array("-n", n.toString)
     val getArgs = new GetArgs(args)
     assertEquals(n, getArgs.nbDay)
   }
 
-  @Test (expected = classOf[GetArgsException])
+  @Test(expected = classOf[GetArgsException])
   def undefinedNbDayShouldFail(): Unit = {
     val args = Array("-n")
     val getArgs = new GetArgs(args)
   }
 
-  @Test (expected = classOf[GetArgsException])
+  @Test(expected = classOf[GetArgsException])
   def nonNumericNbDayShouldFail(): Unit = {
     val args = Array("-n", "tooBad")
     val getArgs = new GetArgs(args)
   }
 
-// ----------- begDate ---------------------------------------
+  // ----------- begDate ---------------------------------------
   @Test def begDateShouldBeNotNull(): Unit = {
     assertNotNull(getArgs.begDate)
   }
 
-  @Test (expected = classOf[GetArgsException])
+  @Test(expected = classOf[GetArgsException])
   def undefinedBegDateShouldFail(): Unit = {
     val args = Array("-b")
     val getArgs = new GetArgs(args)
   }
 
   @Test def begDateShouldBeTodayMinusNbDay(): Unit = {
-    var calendar:Calendar = new GregorianCalendar()
-    var begDate:Date = new Date()
-
-    calendar.setTime(today)
-    calendar.add(Calendar.DAY_OF_YEAR, - getArgs.nbDay)
-    begDate.setTime(calendar.getTimeInMillis)
-
+    var begDate: LocalDate = LocalDate.now.minusDays(getArgs.nbDay)
     assertEquals(begDate, getArgs.begDate)
   }
 
   @Test
   def definedBegDateShouldSuccess(): Unit = {
-    val args = Array("-b", ddmmyyyyFormat.format(today))
+    val args = Array("-b", today.format(GetArgs.ddmmyyyyFormat))
     val getArgs = new GetArgs(args)
     assertEquals(today, getArgs.begDate)
   }
 
-  @Test (expected = classOf[GetArgsException])
+  @Test(expected = classOf[GetArgsException])
   def badBegDateShouldFail(): Unit = {
     val args = Array("-b", "badDate")
     val getArgs = new GetArgs(args)
@@ -109,7 +100,7 @@ class GetArgsTest {
     assertNotNull(getArgs.endDate)
   }
 
-  @Test (expected = classOf[GetArgsException])
+  @Test(expected = classOf[GetArgsException])
   def undefinedEngDateShouldFail(): Unit = {
     val args = Array("-e")
     val getArgs = new GetArgs(args)
@@ -121,23 +112,23 @@ class GetArgsTest {
 
   @Test
   def definedEngDateShouldSuccess(): Unit = {
-    val args = Array("-e", ddmmyyyyFormat.format(today))
+    val args = Array("-e", today.format(GetArgs.ddmmyyyyFormat))
     val getArgs = new GetArgs(args)
     assertEquals(today, getArgs.endDate)
   }
 
-  @Test (expected = classOf[GetArgsException])
+  @Test(expected = classOf[GetArgsException])
   def badEndDateShouldFail(): Unit = {
     val args = Array("-e", "badDate")
     val getArgs = new GetArgs(args)
   }
 
-// ----------- callCenter ---------------------------------------
+  // ----------- callCenter ---------------------------------------
   @Test def callCenterShouldBeExcelia(): Unit = {
     assertEquals("Excelia", getArgs.callCenter)
   }
 
-  @Test (expected = classOf[GetArgsException])
+  @Test(expected = classOf[GetArgsException])
   def undefinedCallCenterShouldFail(): Unit = {
     val args = Array("-cc")
     val getArgs = new GetArgs(args)
@@ -145,18 +136,18 @@ class GetArgsTest {
 
   @Test
   def definedCallCenterShouldSuccess(): Unit = {
-    val callCenter:String = "Anstel"
+    val callCenter: String = "Anstel"
     val args = Array("-cc", callCenter)
     val getArgs = new GetArgs(args)
     assertEquals(callCenter, getArgs.callCenter)
   }
 
-// ----------- client ---------------------------------------
-  @Test def clientShouldBeNull(): Unit = {
-    assertNull(getArgs.client)
+  // ----------- client ---------------------------------------
+  @Test def clientShouldBeEmpty(): Unit = {
+    assertTrue(getArgs.client.isEmpty)
   }
 
-  @Test (expected = classOf[GetArgsException])
+  @Test(expected = classOf[GetArgsException])
   def undefinedClientShouldFail(): Unit = {
     val args = Array("-client")
     val getArgs = new GetArgs(args)
@@ -164,18 +155,18 @@ class GetArgsTest {
 
   @Test
   def definedClientShouldSuccess(): Unit = {
-    val client:String = "Anstel"
+    val client: String = "Anstel"
     val args = Array("-client", client)
     val getArgs = new GetArgs(args)
     assertEquals(client, getArgs.client)
   }
 
-// ----------- clientUuid ---------------------------------------
-  @Test def clientUuidShouldBeNull(): Unit = {
-    assertNull(getArgs.clientUuid)
+  // ----------- clientUuid ---------------------------------------
+  @Test def clientUuidShouldBeEmpty(): Unit = {
+    assertTrue(getArgs.clientUuid.isEmpty)
   }
 
-  @Test (expected = classOf[GetArgsException])
+  @Test(expected = classOf[GetArgsException])
   def undefinedClientUuidShouldFail(): Unit = {
     val args = Array("-clientUuid")
     val getArgs = new GetArgs(args)
@@ -183,20 +174,20 @@ class GetArgsTest {
 
   @Test
   def definedClientUuidShouldSuccess(): Unit = {
-    val clientUuid:String = "03481b72-8e09-43b8-b448-3e487d92fa79"
+    val clientUuid: String = "03481b72-8e09-43b8-b448-3e487d92fa79"
     val args = Array("-clientUuid", clientUuid)
     val getArgs = new GetArgs(args)
     assertEquals(clientUuid, getArgs.clientUuid)
   }
 
-//TODO ATTENTION : prévoir de vérifier la bonne syntaxe de UUID
+  //TODO ATTENTION : prévoir de vérifier la bonne syntaxe de UUID
 
-// ----------- path ---------------------------------------
+  // ----------- path ---------------------------------------
   @Test def pathShouldBeDot(): Unit = {
     assertEquals(".", getArgs.path)
   }
 
-  @Test (expected = classOf[GetArgsException])
+  @Test(expected = classOf[GetArgsException])
   def undefinedPathShouldFail(): Unit = {
     val args = Array("-path")
     val getArgs = new GetArgs(args)
@@ -204,18 +195,18 @@ class GetArgsTest {
 
   @Test
   def definedPathShouldSuccess(): Unit = {
-    val path:String = "/temp"
+    val path: String = "/temp"
     val args = Array("-path", path)
     val getArgs = new GetArgs(args)
     assertEquals(path, getArgs.path)
   }
 
-// ----------- suffix ---------------------------------------
-  @Test def suffixShouldBeUndefined(): Unit = {
-    assertNull(getArgs.suffix)
+  // ----------- suffix ---------------------------------------
+  @Test def suffixShouldBeEmpty(): Unit = {
+    assertTrue(getArgs.suffix.isEmpty)
   }
 
-  @Test (expected = classOf[GetArgsException])
+  @Test(expected = classOf[GetArgsException])
   def undefinedSuffixShouldFail(): Unit = {
     val args = Array("-suffix")
     val getArgs = new GetArgs(args)
@@ -223,13 +214,13 @@ class GetArgsTest {
 
   @Test
   def definedSuffixShouldSuccess(): Unit = {
-    val suffix:String = "fw25"
+    val suffix: String = "fw25"
     val args = Array("-suffix", suffix)
     val getArgs = new GetArgs(args)
     assertEquals(suffix, getArgs.suffix)
   }
 
-// ----------- debugMode ---------------------------------------
+  // ----------- debugMode ---------------------------------------
   @Test def debugModeShouldBeFalse(): Unit = {
     assertFalse(getArgs.debugMode)
   }
@@ -241,7 +232,7 @@ class GetArgsTest {
     assertTrue(getArgs.debugMode)
   }
 
-// ----------- testMode ---------------------------------------
+  // ----------- testMode ---------------------------------------
   @Test def testModeShouldBeFalse(): Unit = {
     assertFalse(getArgs.testMode)
   }
