@@ -3,6 +3,7 @@ package com.anstel.getargs
 import java.text.SimpleDateFormat
 import java.util.{Calendar, Date, GregorianCalendar}
 
+import com.anstel.libUtilsScala.GetArgsException
 import org.junit.Assert._
 import org.junit._
 
@@ -10,7 +11,7 @@ import org.junit._
  * Jeux de tests pour la classe GetArgs
  *
  * @author Thierry Baribaud
- * @version 1.05
+ * @version 1.06
  */
 class GetArgsTest {
 

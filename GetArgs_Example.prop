@@ -1,0 +1,13 @@
+mongodb.prod.name=Base de données de production
+mongodb.prod.host=host
+mongodb.prod.port=3123
+mongodb.prod.username=user
+mongodb.prod.passwd=passwd
+mongodb.prod.database=db
+
+mongodb.dev.name=Base de données de développement
+mongodb.dev.host=host
+mongodb.dev.port=3123
+mongodb.dev.username=user
+mongodb.dev.passwd=passwd
+mongodb.dev.database=db

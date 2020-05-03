@@ -2,22 +2,14 @@ package com.anstel.getargs
 
 import java.text.SimpleDateFormat
 import java.util.{Calendar, Date, GregorianCalendar}
-
-/**
- * Exception lancée en cas de problème avec un paramètre en ligne
- *
- * @param msg message d'erreur
- */
-class GetArgsException(msg: String) extends Exception(msg) {
-  println(msg)
-}
+import com.anstel.libUtilsScala.{ApplicationProperties, GetArgsException}
 
 /**
  * Classe définissant l'objet GetArgs
  *
  * @param args paramètres en ligne de commande
  * @author Thierry Baribaud.
- * @version 1.05
+ * @version 1.06
  */
 class GetArgs(args: Array[String]) {
 
@@ -196,9 +188,12 @@ object GetArgs {
       val getArgs: GetArgs = new GetArgs(args)
       println(getArgs)
       println("Instanciation effectuée.")
+
+      val applicationProperties : ApplicationProperties = new ApplicationProperties("GetArgs2.prop")
+      println(applicationProperties)
     }
     catch {
-      case ex: GetArgsException => println("ERREUR : Problème lors de l'instanciation de GetArgs")
+      case exception: Exception => println("ERREUR : Problème lors de l'instanciation de GetArgs " + exception)
     }
   }
 
