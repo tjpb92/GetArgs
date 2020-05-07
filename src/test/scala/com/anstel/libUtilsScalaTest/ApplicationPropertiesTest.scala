@@ -28,43 +28,43 @@ class ApplicationPropertiesTest {
     assertNotNull(applicationProperties)
   }
 
-  @Test
-  def databasePropertyShouldBeDb(): Unit = {
-    assertEquals("db", applicationProperties.getPropertyValue("dev.mongodb.database") match {
-      case Left(value) => value
-      case Right(value) => value
-    })
-  }
-
-  @Test
-  def unknownProperty(): Unit = {
-    assertEquals("ERREUR", applicationProperties.getPropertyValue("dev.mongodb.unknown") match {
-      case Left(value) => "ERREUR"
-      case Right(value) => value
-    })
-  }
-
-  @Test
-  def validPortNumber(): Unit = {
-    assertEquals("unEntier", applicationProperties.getPropertyValue("dev.mongodb.port") match {
-      case Left(value) => "ERREUR"
-      case Right(value) => toInt(value) match {
-        case Failure(exception) => "ERREUR"
-        case Success(value) => "unEntier"
-      }
-    })
-  }
-
-  @Test
-  def invalidPortNumber(): Unit = {
-    assertEquals("ERREUR", applicationProperties.getPropertyValue("test.mongodb.port") match {
-      case Left(value) => "autreErreur"
-      case Right(value) => toInt(value) match {
-        case Failure(exception) => "ERREUR"
-        case Success(value) => "unEntier"
-      }
-    })
-  }
+//  @Test
+//  def databasePropertyShouldBeDb(): Unit = {
+//    assertEquals("db", applicationProperties.getPropertyValue("dev.mongodb.database") match {
+//      case Left(value) => value
+//      case Right(value) => value
+//    })
+//  }
+//
+//  @Test
+//  def unknownProperty(): Unit = {
+//    assertEquals("ERREUR", applicationProperties.getPropertyValue("dev.mongodb.unknown") match {
+//      case Left(value) => "ERREUR"
+//      case Right(value) => value
+//    })
+//  }
+//
+//  @Test
+//  def validPortNumber(): Unit = {
+//    assertEquals("unEntier", applicationProperties.getPropertyValue("dev.mongodb.port") match {
+//      case Left(value) => "ERREUR"
+//      case Right(value) => toInt(value) match {
+//        case Failure(exception) => "ERREUR"
+//        case Success(value) => "unEntier"
+//      }
+//    })
+//  }
+//
+//  @Test
+//  def invalidPortNumber(): Unit = {
+//    assertEquals("ERREUR", applicationProperties.getPropertyValue("test.mongodb.port") match {
+//      case Left(value) => "autreErreur"
+//      case Right(value) => toInt(value) match {
+//        case Failure(exception) => "ERREUR"
+//        case Success(value) => "unEntier"
+//      }
+//    })
+//  }
 
   @Test
   def emptyUsername(): Unit = {

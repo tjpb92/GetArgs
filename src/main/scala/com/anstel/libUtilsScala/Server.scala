@@ -3,28 +3,25 @@ package com.anstel.libUtilsScala
 import scala.util.{Failure, Success, Try}
 
 /**
- * Classe définissant l'objet DbServer
+ * Classe définissant l'objet Server
  *
  * @param name     : nom de l'environnement de travail
- * @param host     : nom ou adresse IP du serveur de base de données
+ * @param host     : nom ou adresse IP du serveur
  * @param port     : numéro du port
- * @param database : base de données
- * @param username : identifiant de l'utilisateur
  * @param password : mot de passe de l'utilisateur
  * @author Thierry Baribaud
  * @version 1.08
  */
-case class DbServer(name: String, host: String, port: Int, database: String, username: String, password: String)
+case class Server(name: String, host: String, port: Int, username: String, password: String)
 
-object DbServer {
-  def builder(serverType: String, service: String, applicationProperties: ApplicationProperties): Either[String, DbServer] = for {
+object Server {
+  def builder(serverType: String, service: String, applicationProperties: ApplicationProperties): Either[String, Server] = for {
     name <- applicationProperties.getPropertyValue(makeKey(serverType, service, "name"))
     host <- applicationProperties.getPropertyValue(makeKey(serverType, service, "host"))
     port <- checkPortNumber(applicationProperties.getPropertyValue(makeKey(serverType, service, "port")))
-    database <- applicationProperties.getPropertyValue(makeKey(serverType, service, "database"))
     username <- applicationProperties.getPropertyValue(makeKey(serverType, service, "username"))
     passwd <- applicationProperties.getPropertyValue(makeKey(serverType, service, "passwd"))
-  } yield DbServer(name, host, port, database, username, passwd)
+  } yield Server(name, host, port, username, passwd)
 
   /**
    * Fonction servant à définir une clé d'une propriété de l'apllication
@@ -52,5 +49,35 @@ object DbServer {
         case Success(value) => Right(value)
       }
     }
+  }
+
+  def main(args: Array[String]) {
+    val serverType = "dev"
+    val service = "mongodb"
+
+    val applicationProperties: ApplicationProperties = new ApplicationProperties("GetArgs_Example.prop")
+    println("applicationProperties:" + applicationProperties)
+    println("  name:" + applicationProperties.getPropertyValue(makeKey(serverType, service, "name")))
+    println("  host:" + applicationProperties.getPropertyValue(makeKey(serverType, service, "host")))
+    println("  port:" + applicationProperties.getPropertyValue(makeKey(serverType, service, "port")))
+    println("  username:" + applicationProperties.getPropertyValue(makeKey(serverType, service, "username")))
+    println("  passwd:" + applicationProperties.getPropertyValue(makeKey(serverType, service, "passwd")))
+
+    val result = Server.builder(serverType, service, applicationProperties)
+    println("result:" + result)
+
+    val server = result match {
+//      case Right(server) => poursuivreAvec(server)
+      case Right(server) => server
+      case Left(error) => println(error)
+    }
+    println(s"server:$server")
+    println(s"server.getclass:${server.getClass}")
+//    println(s"server.database:${server.username}") // Pourquoi y a-t-il une erreur ici ?
+
+  }
+
+  def poursuivreAvec(server: Server): Unit = {
+    println(s"server.database:${server.username}")
   }
 }

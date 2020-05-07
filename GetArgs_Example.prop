@@ -21,3 +21,12 @@ test.mongodb.port=unNombre
 test.mongodb.username=
 test.mongodb.passwd=passwd
 test.mongodb.database=db
+
+# Mailserver
+mailServer.name=Serveur de messagerie
+mailServer.host=1.2.3.4
+mailServer.port=25
+mailServer.username=user
+mailServer.passwd=password
+mailServer.fromAddress=emetteur@domain.com
+mailServer.toAddress=destinataire@destination.com

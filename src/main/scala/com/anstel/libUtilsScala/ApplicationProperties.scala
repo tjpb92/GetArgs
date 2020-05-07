@@ -12,7 +12,7 @@ import java.util.Properties
  *
  * @param filename of the file that contains application properties
  * @author Thierry Baribaud.
- * @version 1.07
+ * @version 1.08
  */
 class ApplicationProperties(filename: String) extends Properties {
 
@@ -23,8 +23,8 @@ class ApplicationProperties(filename: String) extends Properties {
 
   def getPropertyValue(key: String): Either[String, String] = {
     val property = getProperty(key)
-    if (property == null) Left(s"ERREUR : Propriété non définie $property")
-    else if (property.isEmpty) Left(s"ERREUR : Propriété vide")
+    if (property == null) Left(s"ERREUR : Propriété $key non définie $property")
+    else if (property.isEmpty) Left(s"ERREUR : Propriété $key vide")
     else Right(property)
   }
 }
